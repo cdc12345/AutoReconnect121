@@ -3,9 +3,10 @@
   "id": "${id}",
   "version": "${version}",
   "name": "${name}",
-  "description": "This mod will automatically try to reconnect you back to a server if you got disconnected.\\nBy default, it will make 4 attempts after 3, 10, 30 and 60 seconds.",
+  "description": "This mod will automatically try to reconnect you back to a server if you got disconnected.",
   "authors": [
-    "Bstn1802"
+    "Bstn1802",
+    "Aeltumn"
   ],
   "contact": {
     "homepage": "https://github.com/Bstn1802/AutoReconnect",
