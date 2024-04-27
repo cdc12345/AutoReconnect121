@@ -4,18 +4,20 @@ import autoreconnect.config.AutoReconnectConfig;
 import autoreconnect.reconnect.ReconnectStrategy;
 import autoreconnect.reconnect.SingleplayerReconnectStrategy;
 import com.mojang.logging.LogUtils;
+import com.mojang.realmsclient.RealmsMainScreen;
 import net.fabricmc.api.ClientModInitializer;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.Element;
-import net.minecraft.client.gui.screen.DisconnectedScreen;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.TitleScreen;
-import net.minecraft.client.gui.screen.multiplayer.MultiplayerScreen;
-import net.minecraft.client.gui.screen.world.SelectWorldScreen;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.realms.gui.screen.RealmsMainScreen;
-import net.minecraft.text.TranslatableTextContent;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.screens.DisconnectedScreen;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.TitleScreen;
+import net.minecraft.client.gui.screens.multiplayer.JoinMultiplayerScreen;
+import net.minecraft.client.gui.screens.worldselection.SelectWorldScreen;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.network.chat.contents.TranslatableContents;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.vehicle.Minecart;
 
 import java.util.Iterator;
 import java.util.Optional;
@@ -110,7 +112,7 @@ public class AutoReconnect implements ClientModInitializer {
         // Send automatic messages if configured for the current context
         getConfig().getAutoMessagesForName(reconnectStrategy.getName()).ifPresent(
             autoMessages -> sendAutomatedMessages(
-                MinecraftClient.getInstance().player,
+                Minecraft.getInstance().player,
                 autoMessages.getMessages(),
                 autoMessages.getDelay()
             )
@@ -132,7 +134,7 @@ public class AutoReconnect implements ClientModInitializer {
     private void countdown(int seconds, final IntConsumer callback) {
         if (reconnectStrategy == null) return; // should not happen
         if (seconds == 0) {
-            MinecraftClient.getInstance().execute(this::reconnect);
+            Minecraft.getInstance().execute(this::reconnect);
             return;
         }
         callback.accept(seconds);
@@ -149,7 +151,7 @@ public class AutoReconnect implements ClientModInitializer {
      * @param messages String Iterator of messages to send.
      * @param delay    Delay in milliseconds before the first and between each following message.
      */
-    private void sendAutomatedMessages(ClientPlayerEntity player, Iterator<String> messages, int delay) {
+    private void sendAutomatedMessages(LocalPlayer player, Iterator<String> messages, int delay) {
         ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
         executorService.scheduleWithFixedDelay(() -> {
             if (!messages.hasNext()) {
@@ -167,14 +169,14 @@ public class AutoReconnect implements ClientModInitializer {
      * @param player  Player to send the message as.
      * @param message String with the message or command to send.
      */
-    private void sendMessage(ClientPlayerEntity player, String message) {
+    private void sendMessage(LocalPlayer player, String message) {
         if (message.startsWith("/")) {
             // The first starting slash has to be removed,
             // otherwise it will be interpreted as a double slash.
             String command = message.substring(1);
-            player.networkHandler.sendCommand(command);
+            player.connection.sendCommand(command);
         } else {
-            player.networkHandler.sendChatMessage(message);
+            player.connection.sendChat(message);
         }
     }
 
@@ -186,7 +188,7 @@ public class AutoReconnect implements ClientModInitializer {
 
     private static boolean isMainScreen(Screen screen) {
         return screen instanceof TitleScreen || screen instanceof SelectWorldScreen ||
-            screen instanceof MultiplayerScreen || screen instanceof RealmsMainScreen;
+            screen instanceof JoinMultiplayerScreen || screen instanceof RealmsMainScreen;
     }
 
     private static boolean isReAuthenticating(Screen from, Screen to) {
@@ -194,14 +196,12 @@ public class AutoReconnect implements ClientModInitializer {
             to.getClass().getName().startsWith("me.axieum.mcmod.authme");
     }
 
-    public static Optional<ButtonWidget> findBackButton(Screen screen) {
-        for (Element element : screen.children()) {
-            if (!(element instanceof ButtonWidget button)) continue;
+    public static Optional<Button> findBackButton(Screen screen) {
+        for (GuiEventListener element : screen.children()) {
+            if (!(element instanceof Button button)) continue;
 
             String translatableKey;
-            if (button.getMessage() instanceof TranslatableTextContent translatable) {
-                translatableKey = translatable.getKey();
-            } else if (button.getMessage().getContent() instanceof TranslatableTextContent translatable) {
+            if (button.getMessage().getContents() instanceof TranslatableContents translatable) {
                 translatableKey = translatable.getKey();
             } else continue;
 

@@ -5,12 +5,12 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [],
   "client": [
-    "ClientPlayNetworkHandlerMixin",
+    "ClientPacketListenerMixin",
     "ConnectScreenMixin",
     "DisconnectedScreenMixin",
-    "DisconnectedScreensMixin",
-    "MinecraftClientMixin",
-    "RealmsConnectionMixin"
+    "DisconnectedRealmsScreenMixin",
+    "MinecraftMixin",
+    "RealmsConnectMixin"
   ],
   "injectors": {
     "defaultRequire": 1

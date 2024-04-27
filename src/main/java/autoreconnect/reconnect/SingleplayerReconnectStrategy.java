@@ -1,9 +1,7 @@
 package autoreconnect.reconnect;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.MessageScreen;
-import net.minecraft.client.gui.screen.TitleScreen;
-import net.minecraft.text.Text;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.TitleScreen;
 
 public class SingleplayerReconnectStrategy extends ReconnectStrategy {
     private final String worldName;
@@ -18,15 +16,14 @@ public class SingleplayerReconnectStrategy extends ReconnectStrategy {
     }
 
     /**
-     * @see net.minecraft.client.QuickPlay#startSingleplayer(MinecraftClient, String)
+     * @see net.minecraft.client.QuickPlay#joinSingleplayerWorld(net.minecraft.client.Minecraft, String)
      */
     @Override
     public void reconnect() {
-        MinecraftClient client = MinecraftClient.getInstance();
-        if (!client.getLevelStorage().levelExists(getName())) return;
-        client.setScreenAndRender(new MessageScreen(Text.translatable("selectWorld.data_read")));
-        client.createIntegratedServerLoader().start(getName(), () -> {
-            client.setScreen(new TitleScreen());
+        var minecraft = Minecraft.getInstance();
+        if (!minecraft.getLevelSource().levelExists(worldName)) return;
+        minecraft.createWorldOpenFlows().checkForBackupAndLoad(worldName, () -> {
+            minecraft.setScreen(new TitleScreen());
         });
     }
 }
