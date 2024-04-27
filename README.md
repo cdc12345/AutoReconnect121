@@ -5,7 +5,7 @@
 This mod will automatically try to reconnect you back to a server if you got disconnected.
 By default, it will keep reconnecting every 10 seconds.
 
-This is a fork of the original version, updated to the latest version with small fixes and changed default values. This is a personal fork I'm maintaining because I frequently use this mod. Releases are on GitHub for ease of downloading.
+This is a fork of the original version, updated to the latest version with small fixes and changed default values. This is a personal fork I'm maintaining because I frequently use this mod. Releases are on GitHub for ease of downloading. The original version can be found [here](https://github.com/Bstn1802/AutoReconnect). All changes made to the original version can be found in the commit history.
 
 _Disclaimer:_ Use at your own risk. When using this on a multiplayer server/realm you might want to check with the admins first whether it's okay to use this mod.
 
@@ -104,4 +104,5 @@ _Last one outdated_
 
 This mod and its code is available under the GNU Lesser General Public Licence v3.0.
 
-If you use code from this mod or the mod itself in a mod pack I would appreciate it if you would mention me by linking to this page.
+If you use code from this mod or the mod itself in a mod pack, it would be appreciated if you credit the [original version](https://github.com/Bstn1802/AutoReconnect)!
+
