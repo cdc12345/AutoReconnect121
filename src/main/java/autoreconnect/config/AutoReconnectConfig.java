@@ -18,9 +18,9 @@ public final class AutoReconnectConfig {
     private static final Gson GSON = new GsonBuilder().setLenient().setPrettyPrinting().create();
     private static AutoReconnectConfig instance;
 
-    static final List<Integer> defaultDelays = List.of(3, 10, 30, 60);
+    static final List<Integer> defaultDelays = List.of(10, 10, 10, 10);
     static final int defaultDelay = 10;
-    static final boolean defaultInfinite = false;
+    static final boolean defaultInfinite = true;
     static final List<AutoMessages> defaultAutoMessages = List.of();
 
     List<Integer> delays = defaultDelays;
