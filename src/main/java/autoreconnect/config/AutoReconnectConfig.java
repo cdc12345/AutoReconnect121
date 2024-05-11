@@ -34,9 +34,17 @@ public final class AutoReconnectConfig {
     }
 
     public static void load() {
+        var targetFile = FabricLoader.getInstance().getConfigDir().resolve(FILE_NAME);
+        if (!targetFile.toFile().exists()) {
+            LogUtils.getLogger().info("AutoReconnect config does not yet exist, generating new file");
+            instance = new AutoReconnectConfig();
+            instance.save();
+            return;
+        }
+
         try {
             instance = GSON.fromJson(
-                Files.readString(FabricLoader.getInstance().getConfigDir().resolve(FILE_NAME)),
+                Files.readString(targetFile),
                 AutoReconnectConfig.class);
             instance.validate();
         } catch (IOException | JsonSyntaxException ex) {

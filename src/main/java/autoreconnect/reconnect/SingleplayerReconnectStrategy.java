@@ -22,7 +22,7 @@ public class SingleplayerReconnectStrategy extends ReconnectStrategy {
     public void reconnect() {
         var minecraft = Minecraft.getInstance();
         if (!minecraft.getLevelSource().levelExists(worldName)) return;
-        minecraft.createWorldOpenFlows().checkForBackupAndLoad(worldName, () -> {
+        minecraft.createWorldOpenFlows().openWorld(worldName, () -> {
             minecraft.setScreen(new TitleScreen());
         });
     }
