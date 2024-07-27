@@ -28,18 +28,13 @@ import java.util.function.IntConsumer;
 public class AutoReconnect implements ClientModInitializer {
     private static final ScheduledThreadPoolExecutor EXECUTOR_SERVICE = new ScheduledThreadPoolExecutor(1);
     private static AutoReconnect instance;
-    private final AtomicReference<ScheduledFuture<?>> countdown = new AtomicReference<>(null);
-    private ReconnectStrategy reconnectStrategy = null;
 
     static {
         EXECUTOR_SERVICE.setRemoveOnCancelPolicy(true);
     }
 
-    @Override
-    public void onInitializeClient() {
-        instance = this;
-        AutoReconnectConfig.load();
-    }
+    private final AtomicReference<ScheduledFuture<?>> countdown = new AtomicReference<>(null);
+    private ReconnectStrategy reconnectStrategy = null;
 
     public static AutoReconnect getInstance() {
         return instance;
@@ -53,6 +48,45 @@ public class AutoReconnect implements ClientModInitializer {
         return EXECUTOR_SERVICE.schedule(command, delay, timeUnit);
     }
 
+    private static boolean sameType(Object a, Object b) {
+        if (a == null && b == null) return true;
+        if (a != null && b != null) return a.getClass().equals(b.getClass());
+        return false;
+    }
+
+    private static boolean isMainScreen(Screen screen) {
+        return screen instanceof TitleScreen || screen instanceof SelectWorldScreen ||
+            screen instanceof JoinMultiplayerScreen || screen instanceof RealmsMainScreen;
+    }
+
+    private static boolean isReAuthenticating(Screen from, Screen to) {
+        return from instanceof DisconnectedScreen && to != null &&
+            to.getClass().getName().startsWith("me.axieum.mcmod.authme");
+    }
+
+    public static Optional<Button> findBackButton(Screen screen) {
+        for (GuiEventListener element : screen.children()) {
+            if (!(element instanceof Button button)) continue;
+
+            String translatableKey;
+            if (button.getMessage().getContents() instanceof TranslatableContents translatable) {
+                translatableKey = translatable.getKey();
+            } else continue;
+
+            // check for gui.back, gui.toMenu, gui.toRealms, gui.toTitle, gui.toWorld (only ones starting with "gui.to")
+            if (translatableKey.equals("gui.back") || translatableKey.startsWith("gui.to")) {
+                return Optional.of(button);
+            }
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public void onInitializeClient() {
+        instance = this;
+        AutoReconnectConfig.load();
+    }
+
     public void setReconnectHandler(ReconnectStrategy reconnectStrategy) {
         if (this.reconnectStrategy != null) {
             // should imply that both handlers target the same world/server
@@ -62,6 +96,10 @@ public class AutoReconnect implements ClientModInitializer {
             return;
         }
         this.reconnectStrategy = reconnectStrategy;
+    }
+
+    public boolean isNullReconnect(){
+        return reconnectStrategy == null;
     }
 
     public void reconnect() {
@@ -178,38 +216,5 @@ public class AutoReconnect implements ClientModInitializer {
         } else {
             player.connection.sendChat(message);
         }
-    }
-
-    private static boolean sameType(Object a, Object b) {
-        if (a == null && b == null) return true;
-        if (a != null && b != null) return a.getClass().equals(b.getClass());
-        return false;
-    }
-
-    private static boolean isMainScreen(Screen screen) {
-        return screen instanceof TitleScreen || screen instanceof SelectWorldScreen ||
-            screen instanceof JoinMultiplayerScreen || screen instanceof RealmsMainScreen;
-    }
-
-    private static boolean isReAuthenticating(Screen from, Screen to) {
-        return from instanceof DisconnectedScreen && to != null &&
-            to.getClass().getName().startsWith("me.axieum.mcmod.authme");
-    }
-
-    public static Optional<Button> findBackButton(Screen screen) {
-        for (GuiEventListener element : screen.children()) {
-            if (!(element instanceof Button button)) continue;
-
-            String translatableKey;
-            if (button.getMessage().getContents() instanceof TranslatableContents translatable) {
-                translatableKey = translatable.getKey();
-            } else continue;
-
-            // check for gui.back, gui.toMenu, gui.toRealms, gui.toTitle, gui.toWorld (only ones starting with "gui.to")
-            if (translatableKey.equals("gui.back") || translatableKey.startsWith("gui.to")) {
-                return Optional.of(button);
-            }
-        }
-        return Optional.empty();
     }
 }
