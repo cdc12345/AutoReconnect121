@@ -1,0 +1,26 @@
+{
+  "text.autoreconnect.disconnect.reconnect": "重连",
+  "text.autoreconnect.disconnect.reconnect_in": "即将在 %d 后重连",
+  "text.autoreconnect.disconnect.cancel": "取消",
+  "text.autoreconnect.disconnect.reconnect_failed": "因一些原因,无法重连!",
+
+  "text.autoreconnect.config.title": "AutoReconnect配置",
+  "text.autoreconnect.config.option.delays": "延迟",
+  "text.autoreconnect.config.option.infinite": "无限",
+  "text.autoreconnect.config.option.automessages": "重连自动消息",
+  "text.autoreconnect.config.option.automessages.instance": "重连自动消息对象",
+  "text.autoreconnect.config.option.automessages.name": "名称",
+  "text.autoreconnect.config.option.automessages.messages": "内容",
+  "text.autoreconnect.config.option.automessages.delay": "延迟",
+
+  "text.autoreconnect.config.tooltip.option.delays": "重连之间的间隔时间(单位:秒)",
+  "text.autoreconnect.config.tooltip.option.infinite": "无限制重连",
+  "text.autoreconnect.config.tooltip.option.automessages": "消息将会在成功重连后自动发送",
+  "text.autoreconnect.config.tooltip.option.automessages.instance": "单个自动消息对象起效于一个特定的世界,服务器或者Realm",
+  "text.autoreconnect.config.tooltip.option.automessages.name": "单人世界,服务器或者Realm名称",
+  "text.autoreconnect.config.tooltip.option.automessages.messages": "消息将会在重连后自动发送",
+  "text.autoreconnect.config.tooltip.option.automessages.delay": "重连后与前一条消息的间隔时间(单位:毫秒)",
+
+  "text.autoreconnect.config.error.empty_list": "请勿输入空列表!",
+  "text.autoreconnect.config.error.empty_string": "请勿输入空白!"
+}

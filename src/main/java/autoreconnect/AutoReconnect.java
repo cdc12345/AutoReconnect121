@@ -99,7 +99,7 @@ public class AutoReconnect implements ClientModInitializer {
         // TODO condition could use some improvement, shouldn't cause any issues tho
         if (!isMainScreen(current) && isMainScreen(next) || isReAuthenticating(current, next)) {
             cancelAutoReconnect();
-            reconnectStrategy = null;
+//            reconnectStrategy = null;
         }
     }
 

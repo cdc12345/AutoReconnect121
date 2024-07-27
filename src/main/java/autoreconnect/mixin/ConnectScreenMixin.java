@@ -17,6 +17,6 @@ public class ConnectScreenMixin {
     @Inject(at = @At("HEAD"), method = "connect")
     private void connect(Minecraft minecraft, ServerAddress serverAddress, ServerData serverData, TransferState transferState, CallbackInfo ci) {
         if (serverData == null) return;
-        AutoReconnect.getInstance().setReconnectHandler(new MultiplayerReconnectStrategy(serverData, transferState));
+        AutoReconnect.getInstance().setReconnectHandler(MultiplayerReconnectStrategy.buildManager(serverData, transferState));
     }
 }
