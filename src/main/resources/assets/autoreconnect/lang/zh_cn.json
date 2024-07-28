@@ -22,5 +22,7 @@
   "text.autoreconnect.config.tooltip.option.automessages.delay": "重连后与前一条消息的间隔时间(单位:毫秒)",
 
   "text.autoreconnect.config.error.empty_list": "请勿输入空列表!",
-  "text.autoreconnect.config.error.empty_string": "请勿输入空白!"
+  "text.autoreconnect.config.error.empty_string": "请勿输入空白!",
+
+  "text.autoreconnect.title.rReconnect": "右键重连最近的服务器"
 }

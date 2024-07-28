@@ -6,7 +6,8 @@
   "description": "This mod will automatically try to reconnect you back to a server if you got disconnected.",
   "authors": [
     "Bstn1802",
-    "Aeltumn"
+    "Aeltumn",
+    "cdc123"
   ],
   "contact": {
     "homepage": "https://github.com/Bstn1802/AutoReconnect",

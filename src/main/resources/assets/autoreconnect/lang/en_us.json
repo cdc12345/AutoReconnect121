@@ -22,5 +22,7 @@
   "text.autoreconnect.config.tooltip.option.automessages.delay": "Delay between messages and before the first one in milliseconds",
 
   "text.autoreconnect.config.error.empty_list": "Empty list!",
-  "text.autoreconnect.config.error.empty_string": "Empty text field!"
+  "text.autoreconnect.config.error.empty_string": "Empty text field!",
+
+  "text.autoreconnect.title.rReconnect": "Right-Click to the last server"
 }
